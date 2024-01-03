@@ -1,12 +1,12 @@
 
-Tdef(\sambAll, {
+/*Tdef(\sambAll, {
 inf.do {
 q.samba.scramble.do { |buf, i|
 var rate = [1, 1.25, 1.5, 0.75, 0.5].choose;
 (instrument: \simpsamp, buf: buf, rate: rate, amp: 1).play;
 (buf.duration / rate).wait;
 } }
-}).play;
+}).play;*/
 
 q=q?();
 

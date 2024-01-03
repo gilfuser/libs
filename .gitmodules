@@ -1,0 +1,3 @@
+[submodule "SynthDefs/SCLOrkSynths"]
+	path = SynthDefs/SCLOrkSynths
+	url = https://github.com/SCLOrkHub/SCLOrkSynths/tree/master/SynthDefs

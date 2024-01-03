@@ -10,7 +10,7 @@ fork{
     folderPaths = if(paths.isString) { paths.pathMatch } { paths.asArray };
     folderPaths = folderPaths.select(_.endsWith(Platform.pathSeparator.asString));
     q.sampleFamilyFolders = folderPaths;
-    wait(0.1);
+    wait(0.005);
 
     q.loadSamples = { |q, dir, mainDir|
         var myDir = if(dir.contains("/") and: {mainDir.isNil} ){dir} { (mainDir ? q.mainSampDir) +/+ dir};
@@ -46,23 +46,23 @@ fork{
         returnArray
     };
 
-    wait(0.1);
+    wait(0.005);
     fork {
         folderPaths.do { |family|
             b[family.basename.asSymbol] = ();
             b.family[family.basename.asSymbol] = ();
-            0.05.wait;
+            0.0025.wait;
             (family +/+ "*").pathMatch.do { |pa|
                 if ( File.type(pa) == \directory )
                 {
                     b[family.basename.asSymbol][pa.basename.asSymbol] = q.loadSamples(pa);
-                    0.05.wait;
+                    0.0025.wait;
                     s.sync;
                     b[pa.basename.asSymbol] = shallowCopy(b[family.basename.asSymbol][pa.basename.asSymbol]);
-                    0.05.wait;
+                    0.0025.wait;
                     s.sync;
                     b.family[family.basename.asSymbol][pa.basename.asSymbol] = shallowCopy(b[pa.basename.asSymbol]);
-                    0.05.wait;
+                    0.0025.wait;
                     s.sync;
                     q.samples.add(pa);
                     SynthDef(pa.basename.asSymbol, { | out, buf = 0, sustain = 1, begin = 0, end = 1, speed = 1, endSpeed = 1, freq = 440, pan = 0, gate=1, degree = 0, amp=0.5 |
@@ -100,12 +100,23 @@ fork{
             };
         };
     };
-    62.wait;
+    28.wait;
     fork{32.do{|i| b.snare.choose.play; (1/(i+1)).wait};b.rie[0].play};
-    q.samples.printAll;'';
+
+/*(
+        b.keys.do{ |k|
+            postf("% : % ------\n", k.toUpper, b[k.asSymbol].size );
+
+            // if (
+            b[k.asSymbol].class.postln;
+                // == Array) {
+            // b[k.asSymbol].keys.postln;
+            // }
+    };
+    ''.postln;
+    )*/
 }
 )
-
 /*
 (
 SynthDef(\clas11m21, { | out, buf = 0, sustain = 1, begin = 0, end = 1, speed = 1, endSpeed = 1, freq = 440, pan = 0, gate=1, degree = 0, amp = 0.5 |
